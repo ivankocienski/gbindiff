@@ -2,6 +2,7 @@
 import sys
 import string
 import pygame as pg
+import pathlib
 
 ANTI_ALIAS_TEXT = True
 
@@ -24,14 +25,14 @@ def as_printable(ch):
 
 class SourceFile:
     def __init__(self, from_file):
-        self.filename    = from_file
+        self.path        = pathlib.Path(from_file)
         self.binary_data = read_file_into_array(from_file)
 
     def size(self):
         return len(self.binary_data)
 
     def __str__(self):
-        return self.filename
+        return self.path.name
 
 class DiffLevel:
     def __init__(self, source_a, source_b, num_chunks):
@@ -317,10 +318,16 @@ class App:
                         color = (255,255,255)
                     
                     surface=self.font.render(text, ANTI_ALIAS_TEXT, color) 
-                    self.screen.blit(surface, (0, ypos))
+                    self.screen.blit(surface, (0, ypos)) 
 
                     ypos += 20
                     page_offset += 8
+
+                surface=self.font.render(file_a.path.name, ANTI_ALIAS_TEXT, color)
+                self.screen.blit(surface, (100, ypos))
+
+                surface=self.font.render(file_b.path.name, ANTI_ALIAS_TEXT, color)
+                self.screen.blit(surface, (415, ypos))
 
                 pg.display.flip()
 
